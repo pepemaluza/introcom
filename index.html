@@ -18,12 +18,13 @@
     </head>
 
     <body>
+	    <br>Here </br>
 
         <script type="module">
             import {
               AbsoluteOrientationSensor,
               RelativeOrientationSensor
-            } from '../motion-sensors.js';
+            } from './motion-sensors.js';
 
             const params = new URLSearchParams(new URL(window.location.href).search.slice(1));
             const relative = !!Number(params.get("relative"));
@@ -56,7 +57,6 @@
             function initScene() {
                 container = document.createElement('div');
                 document.body.appendChild(container);
-                camera.position.z = 10;
 
             }
 
@@ -64,7 +64,7 @@
                 const options = { frequency: 60, coordinateSystem };
                 console.log(JSON.stringify(options));
                 sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options);
-                sensor.onreading = () => model.quaternion.fromArray(sensor.quaternion).inverse();
+                sensor.onreading = () => console.log(sensor)
                 sensor.onerror = (event) => {
                   if (event.error.name == 'NotReadableError') {
                     console.log("Sensor is not available.");
