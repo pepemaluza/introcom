@@ -3,8 +3,7 @@
     <head>
         <title>Absolute orientation sensor demo</title>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <style>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"><style>
           body {
             margin: 0px;
             overflow: hidden;
@@ -19,15 +18,12 @@
     </head>
 
     <body>
-        <script src="js/three.min.js"></script>
-        <script src="js/OBJLoader.js"></script>
-        <script src="js/MTLLoader.js"></script>
 
         <script type="module">
             import {
               AbsoluteOrientationSensor,
               RelativeOrientationSensor
-            } from '../sensor-polyfills/motion-sensors.js';
+            } from '../motion-sensors.js';
 
             const params = new URLSearchParams(new URL(window.location.href).search.slice(1));
             const relative = !!Number(params.get("relative"));
@@ -56,50 +52,12 @@
                 initSensor();
             }
 
-            renderScene();
 
             function initScene() {
                 container = document.createElement('div');
                 document.body.appendChild(container);
-
-                camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 200);
                 camera.position.z = 10;
 
-                scene = new THREE.Scene();
-
-                var ambientLight = new THREE.AmbientLight(0x404040, 6);
-                scene.add(ambientLight);
-
-                var manager = new THREE.LoadingManager();
-                var mtlLoader = new THREE.MTLLoader(manager);
-                mtlLoader.setTexturePath('resources/');
-                mtlLoader.load('resources/phone.mtl', materials => {
-                    materials.preload();
-                    var objLoader = new THREE.OBJLoader(manager);
-                    objLoader.setMaterials(materials);
-                    objLoader.load('resources/phone.obj', object => {
-                        model = object;
-                        scene.add(model);
-                  });
-                });
-
-                renderer = new THREE.WebGLRenderer({ alpha: true });
-                renderer.setPixelRatio(window.devicePixelRatio);
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                container.appendChild(renderer.domElement);
-
-                window.addEventListener('resize', () => {
-                    camera.aspect = window.innerWidth / window.innerHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                }, false);
-
-                document.addEventListener('mousedown', () => document.documentElement.requestFullscreen());
-                document.addEventListener('fullscreenchange', () => {
-                    if (document.fullscreenElement != null) {
-                        screen.orientation.lock("natural")
-                    }
-                });
             }
 
             function initSensor() {
@@ -113,12 +71,6 @@
                   }
                 }
                 sensor.start();
-            }
-
-            function renderScene() {
-                requestAnimationFrame(renderScene);
-                camera.lookAt(scene.position);
-                renderer.render(scene, camera);
             }
 
             let log = console.log;
